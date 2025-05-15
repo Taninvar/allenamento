@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allenamento Giornaliero</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 1em;
+    }
+    #exercise-image {
+      max-width: 100%;
+      height: auto;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      padding: 1em;
+      font-size: 1.2em;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Allenamento di <span id="today-name"></span></h1>
+  <div id="exercise-area">
+    <h2 id="exercise-name"></h2>
+    <img id="exercise-image" src="" alt="Esercizio">
+    <div id="timer"></div>
+    <button id="start-btn">Inizia</button>
+  </div>
+
+  <script>
+    const schedule = {
+      1: [
+        { name: "Padel (lezione)", duration: 60, rest: 0, img: "https://media.giphy.com/media/3o7abldj0b3rxrZUxW/giphy.gif" }
+      ],
+      2: [
+        { name: "Jumping Jacks", duration: 30, rest: 15, img: "https://media.giphy.com/media/l41lFw057lAJQMwg0/giphy.gif" },
+        { name: "Squat Jump", duration: 30, rest: 15, img: "https://media.giphy.com/media/26FL1soZ3STRDSLGU/giphy.gif" },
+        { name: "Mountain Climbers", duration: 30, rest: 15, img: "https://media.giphy.com/media/3ohs4BSacFKI7A717y/giphy.gif" },
+        { name: "Burpees", duration: 30, rest: 15, img: "https://media.giphy.com/media/l0ExdMHUDKteztyfe/giphy.gif" }
+      ],
+      3: [
+        { name: "Push-up", duration: 30, rest: 30, img: "https://media.giphy.com/media/xT8qBepJQzUj1ylOPA/giphy.gif" },
+        { name: "Step-up su sedia", duration: 30, rest: 30, img: "https://media.giphy.com/media/xUOxf48rwlcA38U2Sk/giphy.gif" },
+        { name: "Rematore con bottiglie", duration: 30, rest: 30, img: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" }
+      ],
+      4: [
+        { name: "Camminata/Corsa", duration: 2700, rest: 0, img: "https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" }
+      ],
+      5: [
+        { name: "Circuito Total Body", duration: 300, rest: 30, img: "https://media.giphy.com/media/3ohs4BSacFKI7A717y/giphy.gif" }
+      ],
+      6: [],
+      0: [
+        { name: "Plank", duration: 30, rest: 20, img: "https://media.giphy.com/media/26gJzCS2v9D8U/giphy.gif" }
+      ]
+    };
+
+    const day = new Date().getDay();
+    const todayExercises = schedule[day] || [];
+    const dayNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+
+    document.getElementById("today-name").textContent = dayNames[day];
+
+    let current = 0;
+    const nameEl = document.getElementById("exercise-name");
+    const imgEl = document.getElementById("exercise-image");
+    const timerEl = document.getElementById("timer");
+    const startBtn = document.getElementById("start-btn");
+
+    function startTimer(duration, callback) {
+      let time = duration;
+      timerEl.textContent = `${time}s`;
+      const interval = setInterval(() => {
+        time--;
+        timerEl.textContent = `${time}s`;
+        if (time <= 0) {
+          clearInterval(interval);
+          callback();
+        }
+      }, 1000);
+    }
+
+    function showExercise(index) {
+      if (index >= todayExercises.length) {
+        nameEl.textContent = "Allenamento completato!";
+        imgEl.src = "";
+        timerEl.textContent = "";
+        startBtn.classList.add("hidden");
+        return;
+      }
+
+      const exercise = todayExercises[index];
+      nameEl.textContent = exercise.name;
+      imgEl.src = exercise.img;
+      timerEl.textContent = "Pronto?";
+      startBtn.classList.remove("hidden");
+    }
+
+    startBtn.onclick = () => {
+      startBtn.classList.add("hidden");
+      const exercise = todayExercises[current];
+      startTimer(exercise.duration, () => {
+        if (exercise.rest > 0) {
+          nameEl.textContent = "Recupero";
+          imgEl.src = "";
+          startTimer(exercise.rest, () => {
+            current++;
+            showExercise(current);
+          });
+        } else {
+          current++;
+          showExercise(current);
+        }
+      });
+    };
+
+    showExercise(current);
+  </script>
+</body>
+</html>
