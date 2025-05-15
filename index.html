@@ -17,15 +17,30 @@
     .hidden {
       display: none;
     }
-    button {
+    button, select {
       padding: 1em;
       font-size: 1.2em;
       margin-top: 1em;
+    }
+    #day-selector {
+      margin-bottom: 1em;
     }
   </style>
 </head>
 <body>
   <h1>Allenamento di <span id="today-name"></span></h1>
+  <div id="day-selector">
+    <label for="day-select">Cambia giorno:</label>
+    <select id="day-select">
+      <option value="0">Domenica</option>
+      <option value="1">Lunedì</option>
+      <option value="2">Martedì</option>
+      <option value="3">Mercoledì</option>
+      <option value="4">Giovedì</option>
+      <option value="5">Venerdì</option>
+      <option value="6">Sabato</option>
+    </select>
+  </div>
   <div id="exercise-area">
     <h2 id="exercise-name"></h2>
     <img id="exercise-image" src="" alt="Esercizio">
@@ -61,17 +76,24 @@
       ]
     };
 
-    const day = new Date().getDay();
-    const todayExercises = schedule[day] || [];
+    let selectedDay = new Date().getDay();
     const dayNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
-    document.getElementById("today-name").textContent = dayNames[day];
-
-    let current = 0;
     const nameEl = document.getElementById("exercise-name");
     const imgEl = document.getElementById("exercise-image");
     const timerEl = document.getElementById("timer");
     const startBtn = document.getElementById("start-btn");
+    const dayNameEl = document.getElementById("today-name");
+    const daySelect = document.getElementById("day-select");
+
+    daySelect.value = selectedDay;
+    daySelect.addEventListener("change", () => {
+      selectedDay = parseInt(daySelect.value);
+      resetWorkout();
+    });
+
+    let current = 0;
+    let todayExercises = schedule[selectedDay] || [];
 
     function startTimer(duration, callback) {
       let time = duration;
@@ -119,6 +141,18 @@
         }
       });
     };
+
+    function resetWorkout() {
+      dayNameEl.textContent = dayNames[selectedDay];
+      current = 0;
+      todayExercises = schedule[selectedDay] || [];
+      showExercise(current);
+    }
+
+    resetWorkout();
+  </script>
+</body>
+</html>
 
     showExercise(current);
   </script>
