@@ -36,32 +36,32 @@
   <script>
     const schedule = {
       1: [
-        { name: "Padel (lezione)", duration: 60, rest: 0, img: "https://media.giphy.com/media/3o7abldj0b3rxrZUxW/giphy.gif" }
+        { name: "Padel (lezione)", duration: 60, rest: 0, img: "" }
       ],
       2: [
-        { name: "Jumping Jacks", duration: 30, rest: 15, img: "https://media.giphy.com/media/l41lFw057lAJQMwg0/giphy.gif" },
-        { name: "Squat Jump", duration: 30, rest: 15, img: "https://media.giphy.com/media/26FL1soZ3STRDSLGU/giphy.gif" },
-        { name: "Mountain Climbers", duration: 30, rest: 15, img: "https://media.giphy.com/media/3ohs4BSacFKI7A717y/giphy.gif" },
-        { name: "Burpees", duration: 30, rest: 15, img: "https://media.giphy.com/media/l0ExdMHUDKteztyfe/giphy.gif" }
+        { name: "Jumping Jacks", duration: 30, rest: 15, img: "https://www.inspireusafoundation.org/wp-content/uploads/2022/12/jumping-jacks.gif" },
+        { name: "Squat Jump", duration: 30, rest: 15, img: "https://www.inspireusafoundation.org/wp-content/uploads/2023/02/jump-squat.gif" },
+        { name: "Mountain Climbers", duration: 30, rest: 15, img: "https://www.inspireusafoundation.org/wp-content/uploads/2023/02/mountain-climbers.gif" },
+        { name: "Burpees", duration: 30, rest: 15, img: "https://www.inspireusafoundation.org/wp-content/uploads/2023/02/burpees.gif" }
       ],
       3: [
-        { name: "Push-up", duration: 30, rest: 30, img: "https://media.giphy.com/media/xT8qBepJQzUj1ylOPA/giphy.gif" },
-        { name: "Step-up su sedia", duration: 30, rest: 30, img: "https://media.giphy.com/media/xUOxf48rwlcA38U2Sk/giphy.gif" },
-        { name: "Rematore con bottiglie", duration: 30, rest: 30, img: "https://media.giphy.com/media/xT0xeJpnrWC4XWblEk/giphy.gif" }
+        { name: "Push-up", duration: 30, rest: 30, img: "https://www.inspireusafoundation.org/wp-content/uploads/2022/12/push-up.gif" },
+        { name: "Step-up su sedia", duration: 30, rest: 30, img: "https://www.inspireusafoundation.org/wp-content/uploads/2022/12/step-up.gif" },
+        { name: "Rematore con bottiglie", duration: 30, rest: 30, img: "https://www.inspireusafoundation.org/wp-content/uploads/2023/02/bent-over-row.gif" }
       ],
       4: [
-        { name: "Camminata/Corsa", duration: 2700, rest: 0, img: "https://media.giphy.com/media/3o7bu3XilJ5BOiSGic/giphy.gif" }
+        { name: "Camminata/Corsa", duration: 2700, rest: 0, img: "https://www.inspireusafoundation.org/wp-content/uploads/2023/01/jogging.gif" }
       ],
       5: [
-        { name: "Circuito Total Body", duration: 300, rest: 30, img: "https://media.giphy.com/media/3ohs4BSacFKI7A717y/giphy.gif" }
+        { name: "Circuito Total Body", duration: 300, rest: 30, img: "https://www.inspireusafoundation.org/wp-content/uploads/2023/01/burpees.gif" }
       ],
       6: [],
       0: [
-        { name: "Plank", duration: 30, rest: 20, img: "https://media.giphy.com/media/26gJzCS2v9D8U/giphy.gif" }
+        { name: "Plank", duration: 30, rest: 20, img: "https://www.inspireusafoundation.org/wp-content/uploads/2022/12/plank.gif" }
       ]
     };
 
-    const day = 2;
+    const day = new Date().getDay();
     const todayExercises = schedule[day] || [];
     const dayNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
 
