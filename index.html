@@ -21,8 +21,12 @@
       overflow: hidden;
     }
     #header, #day-selector, #exercise-area {
-      padding: 0.5em 1em;
-      text-align: center;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1em;
     }
     #exercise-area {
       flex: 1;
@@ -40,12 +44,14 @@
       display: none;
     }
     button, select {
-      padding: 0.8em;
+      padding: 0.8em 1.5em;
       font-size: 1em;
       background-color: #1f1f1f;
       color: #f0f0f0;
       border: 1px solid #333;
       border-radius: 5px;
+      max-width: 90vw;
+      box-sizing: border-box;
     }
     #timer {
       font-size: 1.8em;
@@ -53,19 +59,19 @@
     #reps-counter {
       font-size: 1.1em;
     }
-    h2, h3 {
+    h1, h2 {
       margin: 0.4em 0;
     }
   </style>
 </head>
 <body>
- <div id="container">
+  <div id="container">
     <div id="header">
-      <h2>Allenamento di <span id="today-name"></span></h2>
+      <h1>Allenamento di <span id="today-name"></span></h1>
     </div>
-
+    
     <div id="exercise-area">
-      <h3 id="exercise-name"></h3>
+      <h2 id="exercise-name"></h2>
       <img id="exercise-image" src="" alt="Esercizio">
       <div id="reps-counter"></div>
       <div id="timer"></div>
