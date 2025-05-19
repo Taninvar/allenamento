@@ -78,8 +78,137 @@
   </div>
 
   <script>
-    // (JS invariato)
+    const schedule = {
+      1: [
+        { name: "Padel (lezione)", duration: 60, rest: 0, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/padel.gif" }
+      ],
+      2: [
+        { name: "Jumping Jacks", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jumping-jacks.gif" },
+        { name: "Squat Jump", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/squat-jump.gif" },
+        { name: "Mountain Climbers", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/mountain-climbers.gif" },
+        { name: "Burpees", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
+      ],
+      3: [
+        { name: "Padel (partita)", duration: 90, rest: 0, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/padel.gif" }
+      ],
+      4: [
+        { name: "Push-up", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/push-up.gif" },
+        { name: "Step-up su sedia", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/step-up.gif" },
+        { name: "Rematore con bottiglie", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/rematore.gif" }
+      ],
+      5: [
+        { name: "Burpees", duration: 30, rest: 15, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" },
+        { name: "Mountain Climbers", duration: 30, rest: 15, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/mountain-climbers.gif" },
+        { name: "Push-up", duration: 30, rest: 15, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/push-up.gif" },
+        { name: "Squat Jump", duration: 30, rest: 15, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/squat-jump.gif" }
+      ],
+      6: [],
+      0: [
+        { name: "Plank", duration: 30, rest: 20, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/plank.gif" }
+      ]
+    };
+
+    let selectedDay = new Date().getDay();
+    const dayNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
+
+    const nameEl = document.getElementById("exercise-name");
+    const imgEl = document.getElementById("exercise-image");
+    const timerEl = document.getElementById("timer");
+    const repsEl = document.getElementById("reps-counter");
+    const startBtn = document.getElementById("start-btn");
+    const dayNameEl = document.getElementById("today-name");
+    const daySelect = document.getElementById("day-select");
+
+    daySelect.value = selectedDay;
+    daySelect.addEventListener("change", () => {
+      selectedDay = parseInt(daySelect.value);
+      resetWorkout();
+    });
+
+    let current = 0;
+    let currentRep = 1;
+    let todayExercises = schedule[selectedDay] || [];
+
+    function startTimer(duration, callback) {
+      let time = duration;
+      timerEl.textContent = `${time}s`;
+      const interval = setInterval(() => {
+        time--;
+        timerEl.textContent = `${time}s`;
+        if (time <= 0) {
+          clearInterval(interval);
+          callback();
+        }
+      }, 1000);
+    }
+
+    function showExercise(index, autoStart = false) {
+      if (index >= todayExercises.length) {
+        nameEl.textContent = "Allenamento completato!";
+        imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/workout-complete.gif";
+        timerEl.textContent = "";
+        repsEl.textContent = "";
+        startBtn.classList.add("hidden");
+        return;
+      }
+
+      const exercise = todayExercises[index];
+      nameEl.textContent = exercise.name;
+      imgEl.src = exercise.img;
+      repsEl.textContent = `Ripetizione ${currentRep} / ${exercise.reps}`;
+      timerEl.textContent = "Pronto?";
+
+      if (autoStart) {
+        runExercise();
+      } else {
+        startBtn.classList.remove("hidden");
+      }
+    }
+
+    function runExercise() {
+      startBtn.classList.add("hidden");
+      const exercise = todayExercises[current];
+      startTimer(exercise.duration, () => {
+        if (currentRep < exercise.reps) {
+          nameEl.textContent = "Recupero";
+          imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/recupero.gif";
+          repsEl.textContent = "";
+          startTimer(15, () => {
+            currentRep++;
+            showExercise(current, true);
+          });
+        } else {
+          if (current + 1 < todayExercises.length) {
+            nameEl.textContent = "Recupero tra esercizi";
+            imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/recupero.gif";
+            repsEl.textContent = "";
+            startTimer(30, () => {
+              current++;
+              currentRep = 1;
+              showExercise(current, true);
+            });
+          } else {
+            current++;
+            currentRep = 1;
+            showExercise(current, true);
+          }
+        }
+      });
+    }
+
+    startBtn.onclick = () => {
+      runExercise();
+    };
+
+    function resetWorkout() {
+      dayNameEl.textContent = dayNames[selectedDay];
+      current = 0;
+      currentRep = 1;
+      todayExercises = schedule[selectedDay] || [];
+      showExercise(current);
+    }
+
+    resetWorkout();
   </script>
 </body>
 </html>
-
