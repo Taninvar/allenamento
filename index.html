@@ -12,21 +12,27 @@
       background-color: #121212;
       color: #f0f0f0;
       font-family: sans-serif;
-      overflow: hidden;
     }
-    #exercise-area {
+    #container {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #header, #day-selector, #exercise-area {
+      padding: 0.5em 1em;
+      text-align: center;
+    }
+    #exercise-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 1em;
+      justify-content: space-evenly;
     }
     #exercise-image {
       max-width: 100%;
-      max-height: 40vh;
-      height: auto;
+      max-height: 35vh;
       object-fit: contain;
     }
     .hidden {
@@ -35,14 +41,10 @@
     button, select {
       padding: 1em;
       font-size: 1.2em;
-      margin-top: 1em;
       background-color: #1f1f1f;
       color: #f0f0f0;
       border: 1px solid #333;
       border-radius: 5px;
-    }
-    #day-selector {
-      margin-bottom: 0.5em;
     }
     #timer {
       font-size: 2em;
@@ -56,27 +58,30 @@
   </style>
 </head>
 <body>
-  <h1>Allenamento di <span id="today-name"></span></h1>
-  <div id="day-selector">
-    <label for="day-select">Cambia giorno:</label>
-    <select id="day-select">
-      <option value="0">Domenica</option>
-      <option value="1">Lunedì</option>
-      <option value="2">Martedì</option>
-      <option value="3">Mercoledì</option>
-      <option value="4">Giovedì</option>
-      <option value="5">Venerdì</option>
-      <option value="6">Sabato</option>
-    </select>
+  <div id="container">
+    <div id="header">
+      <h1>Allenamento di <span id="today-name"></span></h1>
+    </div>
+    <div id="day-selector">
+      <label for="day-select">Cambia giorno:</label>
+      <select id="day-select">
+        <option value="0">Domenica</option>
+        <option value="1">Lunedì</option>
+        <option value="2">Martedì</option>
+        <option value="3">Mercoledì</option>
+        <option value="4">Giovedì</option>
+        <option value="5">Venerdì</option>
+        <option value="6">Sabato</option>
+      </select>
+    </div>
+    <div id="exercise-area">
+      <h2 id="exercise-name"></h2>
+      <img id="exercise-image" src="" alt="Esercizio">
+      <div id="reps-counter"></div>
+      <div id="timer"></div>
+      <button id="start-btn">Inizia</button>
+    </div>
   </div>
-  <div id="exercise-area">
-    <h2 id="exercise-name"></h2>
-    <img id="exercise-image" src="" alt="Esercizio">
-    <div id="reps-counter"></div>
-    <div id="timer"></div>
-    <button id="start-btn">Inizia</button>
-  </div>
-
   <script>
     const schedule = {
       1: [
