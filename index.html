@@ -137,7 +137,7 @@
       }, 1000);
     }
 
-    function showExercise(index) {
+    function showExercise(index, autoStart = false) {
       if (index >= todayExercises.length) {
         nameEl.textContent = "Allenamento completato!";
         imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/workout-complete.gif";
@@ -152,10 +152,15 @@
       imgEl.src = exercise.img;
       repsEl.textContent = `Ripetizione ${currentRep} / ${exercise.reps}`;
       timerEl.textContent = "Pronto?";
-      startBtn.classList.remove("hidden");
+
+      if (autoStart) {
+        runExercise();
+      } else {
+        startBtn.classList.remove("hidden");
+      }
     }
 
-    startBtn.onclick = () => {
+    function runExercise() {
       startBtn.classList.add("hidden");
       const exercise = todayExercises[current];
       startTimer(exercise.duration, () => {
@@ -165,14 +170,18 @@
           repsEl.textContent = "";
           startTimer(15, () => {
             currentRep++;
-            showExercise(current);
+            showExercise(current, true);
           });
         } else {
           current++;
           currentRep = 1;
-          showExercise(current);
+          showExercise(current, true);
         }
       });
+    }
+
+    startBtn.onclick = () => {
+      runExercise();
     };
 
     function resetWorkout() {
