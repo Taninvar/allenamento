@@ -10,6 +10,8 @@
       text-align: center;
       padding: 1em;
       margin: 0;
+      background-color: #121212;
+      color: #f0f0f0;
     }
     #exercise-image {
       max-width: 100%;
@@ -25,6 +27,10 @@
       padding: 1em;
       font-size: 1.2em;
       margin-top: 1em;
+      background-color: #1f1f1f;
+      color: #f0f0f0;
+      border: 1px solid #333;
+      border-radius: 5px;
     }
     #day-selector {
       margin-bottom: 1em;
@@ -40,6 +46,10 @@
     #timer {
       font-size: 2em;
       margin-top: 1em;
+    }
+    #reps-counter {
+      font-size: 1.2em;
+      margin-top: 0.5em;
     }
   </style>
 </head>
@@ -60,6 +70,7 @@
   <div id="exercise-area">
     <h2 id="exercise-name"></h2>
     <img id="exercise-image" src="" alt="Esercizio">
+    <div id="reps-counter"></div>
     <div id="timer"></div>
     <button id="start-btn">Inizia</button>
   </div>
@@ -67,28 +78,28 @@
   <script>
     const schedule = {
       1: [
-        { name: "Padel (lezione)", duration: 0, rest: 0, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/padel.gif" }
+        { name: "Padel (lezione)", duration: 60, rest: 0, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/padel.gif" }
       ],
       2: [
-        { name: "Jumping Jacks", duration: 30, rest: 15, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jumping-jacks.gif" },
-        { name: "Squat Jump", duration: 30, rest: 15, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/squat-jump.gif" },
-        { name: "Mountain Climbers", duration: 30, rest: 15, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/mountain-climbers.gif" },
-        { name: "Burpees", duration: 30, rest: 15, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
+        { name: "Jumping Jacks", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jumping-jacks.gif" },
+        { name: "Squat Jump", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/squat-jump.gif" },
+        { name: "Mountain Climbers", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/mountain-climbers.gif" },
+        { name: "Burpees", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
       ],
       3: [
-        { name: "Push-up", duration: 30, rest: 30, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/push-up.gif" },
-        { name: "Step-up su sedia", duration: 30, rest: 30, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/step-up.gif" },
-        { name: "Rematore con bottiglie", duration: 30, rest: 30, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/rematore.gif" }
+        { name: "Push-up", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/push-up.gif" },
+        { name: "Step-up su sedia", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/step-up.gif" },
+        { name: "Rematore con bottiglie", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/rematore.gif" }
       ],
       4: [
-        { name: "Camminata/Corsa", duration: 2700, rest: 0, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jogging.gif" }
+        { name: "Camminata/Corsa", duration: 2700, rest: 0, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jogging.gif" }
       ],
       5: [
-        { name: "Circuito Total Body", duration: 300, rest: 30, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
+        { name: "Circuito Total Body", duration: 300, rest: 30, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
       ],
       6: [],
       0: [
-        { name: "Plank", duration: 30, rest: 20, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/plank.gif" }
+        { name: "Plank", duration: 30, rest: 20, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/plank.gif" }
       ]
     };
 
@@ -98,6 +109,7 @@
     const nameEl = document.getElementById("exercise-name");
     const imgEl = document.getElementById("exercise-image");
     const timerEl = document.getElementById("timer");
+    const repsEl = document.getElementById("reps-counter");
     const startBtn = document.getElementById("start-btn");
     const dayNameEl = document.getElementById("today-name");
     const daySelect = document.getElementById("day-select");
@@ -109,6 +121,7 @@
     });
 
     let current = 0;
+    let currentRep = 1;
     let todayExercises = schedule[selectedDay] || [];
 
     function startTimer(duration, callback) {
@@ -129,6 +142,7 @@
         nameEl.textContent = "Allenamento completato!";
         imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/workout-complete.gif";
         timerEl.textContent = "";
+        repsEl.textContent = "";
         startBtn.classList.add("hidden");
         return;
       }
@@ -136,6 +150,7 @@
       const exercise = todayExercises[index];
       nameEl.textContent = exercise.name;
       imgEl.src = exercise.img;
+      repsEl.textContent = `Ripetizione ${currentRep} / ${exercise.reps}`;
       timerEl.textContent = "Pronto?";
       startBtn.classList.remove("hidden");
     }
@@ -144,15 +159,17 @@
       startBtn.classList.add("hidden");
       const exercise = todayExercises[current];
       startTimer(exercise.duration, () => {
-        if (exercise.rest > 0) {
+        if (currentRep < exercise.reps) {
           nameEl.textContent = "Recupero";
           imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/recupero.gif";
-          startTimer(exercise.rest, () => {
-            current++;
+          repsEl.textContent = "";
+          startTimer(15, () => {
+            currentRep++;
             showExercise(current);
           });
         } else {
           current++;
+          currentRep = 1;
           showExercise(current);
         }
       });
@@ -161,6 +178,7 @@
     function resetWorkout() {
       dayNameEl.textContent = dayNames[selectedDay];
       current = 0;
+      currentRep = 1;
       todayExercises = schedule[selectedDay] || [];
       showExercise(current);
     }
