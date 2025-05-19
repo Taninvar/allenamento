@@ -79,9 +79,6 @@
     </div>
   </div>
 
-
-
-
   <script>
     const schedule = {
       1: [
@@ -122,13 +119,6 @@
     const repsEl = document.getElementById("reps-counter");
     const startBtn = document.getElementById("start-btn");
     const dayNameEl = document.getElementById("today-name");
-    const daySelect = document.getElementById("day-select");
-
-    daySelect.value = selectedDay;
-    daySelect.addEventListener("change", () => {
-      selectedDay = parseInt(daySelect.value);
-      resetWorkout();
-    });
 
     let current = 0;
     let currentRep = 1;
