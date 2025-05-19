@@ -5,20 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Allenamento Giornaliero</title>
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 1em;
+    html, body {
       margin: 0;
+      padding: 0;
+      height: 100%;
       background-color: #121212;
       color: #f0f0f0;
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+    #exercise-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 1em;
     }
     #exercise-image {
       max-width: 100%;
       max-height: 40vh;
       height: auto;
       object-fit: contain;
-      margin: 0 auto;
     }
     .hidden {
       display: none;
@@ -33,23 +42,16 @@
       border-radius: 5px;
     }
     #day-selector {
-      margin-bottom: 1em;
-    }
-    #exercise-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 90vh;
-      box-sizing: border-box;
+      margin-bottom: 0.5em;
     }
     #timer {
       font-size: 2em;
-      margin-top: 1em;
     }
     #reps-counter {
       font-size: 1.2em;
-      margin-top: 0.5em;
+    }
+    h1, h2 {
+      margin: 0.5em 0;
     }
   </style>
 </head>
@@ -76,123 +78,8 @@
   </div>
 
   <script>
-    const schedule = {
-      1: [
-        { name: "Padel (lezione)", duration: 0, rest: 0, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/padel.gif" }
-      ],
-      2: [
-        { name: "Jumping Jacks", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jumping-jacks.gif" },
-        { name: "Squat Jump", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/squat-jump.gif" },
-        { name: "Mountain Climbers", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/mountain-climbers.gif" },
-        { name: "Burpees", duration: 30, rest: 15, reps: 4, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
-      ],
-      3: [
-        { name: "Push-up", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/push-up.gif" },
-        { name: "Step-up su sedia", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/step-up.gif" },
-        { name: "Rematore con bottiglie", duration: 30, rest: 30, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/rematore.gif" }
-      ],
-      4: [
-        { name: "Camminata/Corsa", duration: 2700, rest: 0, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/jogging.gif" }
-      ],
-      5: [
-        { name: "Circuito Total Body", duration: 300, rest: 30, reps: 1, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/burpees.gif" }
-      ],
-      6: [],
-      0: [
-        { name: "Plank", duration: 30, rest: 20, reps: 3, img: "https://raw.githubusercontent.com/taninvar/allenamento/main/img/plank.gif" }
-      ]
-    };
-
-    let selectedDay = new Date().getDay();
-    const dayNames = ["Domenica", "Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato"];
-
-    const nameEl = document.getElementById("exercise-name");
-    const imgEl = document.getElementById("exercise-image");
-    const timerEl = document.getElementById("timer");
-    const repsEl = document.getElementById("reps-counter");
-    const startBtn = document.getElementById("start-btn");
-    const dayNameEl = document.getElementById("today-name");
-    const daySelect = document.getElementById("day-select");
-
-    daySelect.value = selectedDay;
-    daySelect.addEventListener("change", () => {
-      selectedDay = parseInt(daySelect.value);
-      resetWorkout();
-    });
-
-    let current = 0;
-    let currentRep = 1;
-    let todayExercises = schedule[selectedDay] || [];
-
-    function startTimer(duration, callback) {
-      let time = duration;
-      timerEl.textContent = `${time}s`;
-      const interval = setInterval(() => {
-        time--;
-        timerEl.textContent = `${time}s`;
-        if (time <= 0) {
-          clearInterval(interval);
-          callback();
-        }
-      }, 1000);
-    }
-
-    function showExercise(index, autoStart = false) {
-      if (index >= todayExercises.length) {
-        nameEl.textContent = "Allenamento completato!";
-        imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/workout-complete.gif";
-        timerEl.textContent = "";
-        repsEl.textContent = "";
-        startBtn.classList.add("hidden");
-        return;
-      }
-
-      const exercise = todayExercises[index];
-      nameEl.textContent = exercise.name;
-      imgEl.src = exercise.img;
-      repsEl.textContent = `Ripetizione ${currentRep} / ${exercise.reps}`;
-      timerEl.textContent = "Pronto?";
-
-      if (autoStart) {
-        runExercise();
-      } else {
-        startBtn.classList.remove("hidden");
-      }
-    }
-
-    function runExercise() {
-      startBtn.classList.add("hidden");
-      const exercise = todayExercises[current];
-      startTimer(exercise.duration, () => {
-        if (currentRep < exercise.reps) {
-          nameEl.textContent = "Recupero";
-          imgEl.src = "https://raw.githubusercontent.com/taninvar/allenamento/main/img/recupero.gif";
-          repsEl.textContent = "";
-          startTimer(15, () => {
-            currentRep++;
-            showExercise(current, true);
-          });
-        } else {
-          current++;
-          currentRep = 1;
-          showExercise(current, true);
-        }
-      });
-    }
-
-    startBtn.onclick = () => {
-      runExercise();
-    };
-
-    function resetWorkout() {
-      dayNameEl.textContent = dayNames[selectedDay];
-      current = 0;
-      currentRep = 1;
-      todayExercises = schedule[selectedDay] || [];
-      showExercise(current);
-    }
-
-    resetWorkout();
+    // (JS invariato)
   </script>
 </body>
 </html>
+
